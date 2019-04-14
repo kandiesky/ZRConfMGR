@@ -1,0 +1,36 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          SocksV6
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: SocksV6
+# Description:       SocksV6 service
+### END INIT INFO
+
+case "$1" in
+
+  start)
+       screen -dmS SocksDaemon "/usr/lib/socksv6/socksv6"
+        ;;
+  stop)
+        PID=`ps -ef | grep socksv6 | grep -v grep | awk '{print $2}'`
+        kill -9 $PID
+        screen -wipe
+        ;;
+
+  restart|force-reload)
+        PID=`ps -ef | grep socksv6 | grep -v grep | awk '{print $2}'`
+        kill -9 $PID 
+        sleep 3
+        screen -dmS greenview "/usr/lib/socksv6/socksv6"
+        screen -wipe
+        ;;
+  *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|restart}" >&2
+        exit 1
+        ;;
+esac
+exit 0
